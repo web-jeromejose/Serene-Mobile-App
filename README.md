@@ -8,6 +8,33 @@ A YouTube-like mobile app for **Android** (and iOS) with **no sign-in**. It play
 
 Everything is **shuffled randomly** each time you open Home or Shorts.
 
+## Quick start
+
+```mermaid
+flowchart LR
+    A[Put MP4 files in<br/>Resources/Raw/videos] --> B[Build the app]
+    B --> C[Install APK on phone]
+    C --> D[SereneAppTube scans files]
+    D --> E[Home or Shorts]
+    F[YouTube URL] --> G{Internet available?}
+    G -->|Yes| H[Play YouTube video]
+    G -->|No| I[Use local MP4 videos]
+```
+
+The simplest workflow is: copy MP4 files, build, install, and play.
+
+## Video rules
+
+| Input | Result |
+|---|---|
+| `.mp4` in `MyTube/Resources/Raw/videos` | Loaded automatically |
+| MP4 shorter than 11 seconds | Classified as a Short |
+| `.MOV`, `.MKV`, `.WEBM` in the bundled folder | Ignored until converted to MP4 |
+| YouTube URL | Requires internet access |
+| Local video playback | Defaults to `0.8×` speed |
+| Portrait video | Uses a smaller centered player |
+| Landscape video | Uses the normal wide player |
+
 ## Features
 
 | Screen | What it does |
@@ -51,8 +78,6 @@ For best Redmi A3 compatibility, use H.264 8-bit video with AAC audio, `yuv420p`
 - **Upload on the phone:** **+** tab → *Choose video* or *Record*.
 - **Host online:** `{ "url": "https://example.com/my-video.mp4", "title": "My trip", "own": true }`
 
-The three sample "own videos" in the catalog are placeholder clips hosted online. Delete them when you add yours.
-
 ### 4. Update the list without rebuilding (optional)
 Put a `catalog.json` (or a `.txt` with one YouTube link per line) online, for example in a GitHub Gist. Then paste its **raw** link in **Settings → Online video list → Sync now**. The app re-syncs every time it starts.
 
@@ -68,6 +93,11 @@ Local videos use `0.8×` playback by default. YouTube videos request `0.8×` thr
 - [`convert-all-mp4-compatible.cmd`](convert-all-mp4-compatible.cmd) reconverts existing MP4 files using H.264 Main, 8-bit `yuv420p`, AAC, level 4.0, and a maximum 1280-pixel dimension.
 
 Both scripts check duplicate or already-converted filenames before processing and preserve files when conversion fails.
+
+| Script | Use it when |
+|---|---|
+| [`convert-mov-to-mp4.cmd`](convert-mov-to-mp4.cmd) | You have MOV files to convert |
+| [`convert-all-mp4-compatible.cmd`](convert-all-mp4-compatible.cmd) | Existing MP4 files do not play smoothly |
 
 ### Git and personal files
 
@@ -129,7 +159,7 @@ Pick one of the three options below. Option A is the easiest; Option B is best w
    2. Android asks to allow installing unknown apps from that app. Tap **Settings**, switch on **Allow from this source**, and go back.
    3. Tap **Install**. If **Play Protect** warns that it doesn't recognise the app, tap **More details → Install anyway**. This is expected for apps that aren't from the Play Store.
 
-4. **Open MyTube** from the app drawer. Home fills with the sample videos; tap any video to play it, or open the **Shorts** tab and swipe up.
+4. **Open SereneAppTube** from the app drawer. Home shows the MP4 files bundled in `Resources/Raw/videos`; tap any video to play it, or open **Shorts** for clips shorter than 11 seconds.
 
 To update the app later, rebuild and install the new APK the same way. Your likes, history and uploads are kept.
 
