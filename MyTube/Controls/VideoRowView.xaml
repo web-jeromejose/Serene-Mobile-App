@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Compact row (Up next, playlists, history): small thumbnail on the left. -->
+<ContentView
+    x:Class="MyTube.Controls.VideoRowView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:MyTube.Models"
+    x:DataType="m:VideoItem">
+
+    <Grid ColumnDefinitions="168,*,Auto" ColumnSpacing="12" Padding="12,6,0,6">
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnOpen" />
+        </Grid.GestureRecognizers>
+
+        <Border WidthRequest="168" HeightRequest="94" StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
+            <Grid>
+                <Label Style="{StaticResource Icon}" FontFamily="MaterialIcons" Text="&#xe037;" FontSize="32"
+                       TextColor="{AppThemeBinding Light={StaticResource Text2Light}, Dark={StaticResource Text2Dark}}" />
+                <Image Source="{Binding ThumbnailSource}" Aspect="AspectFill" />
+                <Border IsVisible="{Binding IsShort}" BackgroundColor="#CC000000" StrokeThickness="0" StrokeShape="RoundRectangle 4"
+                        Padding="5,1" Margin="6" HorizontalOptions="End" VerticalOptions="End">
+                    <Label Text="SHORTS" TextColor="White" FontSize="10" FontAttributes="Bold" />
+                </Border>
+                <Border IsVisible="{Binding HasDuration}" BackgroundColor="#CC000000" StrokeThickness="0" StrokeShape="RoundRectangle 4"
+                        Padding="5,1" Margin="6" HorizontalOptions="End" VerticalOptions="End">
+                    <Label Text="{Binding DurationText}" TextColor="White" FontSize="11" FontAttributes="Bold" />
+                </Border>
+                <ProgressBar Progress="{Binding WatchProgress}" IsVisible="{Binding HasProgress}" VerticalOptions="End" HeightRequest="3" />
+            </Grid>
+        </Border>
+
+        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Start">
+            <Label Text="{Binding Title}" FontSize="14" FontAttributes="Bold" MaxLines="2" LineBreakMode="TailTruncation" />
+            <Label Text="{Binding Channel}" Style="{StaticResource Secondary}" MaxLines="1" LineBreakMode="TailTruncation" />
+            <Label Text="YOUR VIDEO" IsVisible="{Binding IsOwn}" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource Accent}" />
+        </VerticalStackLayout>
+
+        <Label Grid.Column="2" Style="{StaticResource IconButton}" FontFamily="MaterialIcons" Text="&#xe5d4;" FontSize="20" VerticalOptions="Start">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnMenu" />
+            </Label.GestureRecognizers>
+        </Label>
+    </Grid>
+</ContentView>

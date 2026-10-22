@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Full-width card like the YouTube Home feed: 16:9 thumbnail, avatar, title, meta, ⋮ menu. -->
+<ContentView
+    x:Class="MyTube.Controls.VideoCardView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:MyTube.Models"
+    x:DataType="m:VideoItem">
+
+    <VerticalStackLayout Padding="0,0,0,14">
+        <VerticalStackLayout.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnOpen" />
+        </VerticalStackLayout.GestureRecognizers>
+
+        <Grid x:Name="Thumb" BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
+            <Label Style="{StaticResource Icon}" FontFamily="MaterialIcons" Text="&#xe037;" FontSize="48"
+                   TextColor="{AppThemeBinding Light={StaticResource Text2Light}, Dark={StaticResource Text2Dark}}" />
+            <Image Source="{Binding ThumbnailSource}" Aspect="AspectFill" />
+
+            <Border IsVisible="{Binding IsOwn}" BackgroundColor="#CC000000" StrokeThickness="0" StrokeShape="RoundRectangle 4"
+                    Padding="6,2" Margin="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <Label Text="YOUR VIDEO" TextColor="White" FontSize="10" FontAttributes="Bold" />
+            </Border>
+
+            <Border IsVisible="{Binding HasDuration}" BackgroundColor="#CC000000" StrokeThickness="0" StrokeShape="RoundRectangle 4"
+                    Padding="5,1" Margin="8" HorizontalOptions="End" VerticalOptions="End">
+                <Label Text="{Binding DurationText}" TextColor="White" FontSize="12" FontAttributes="Bold" />
+            </Border>
+
+            <ProgressBar Progress="{Binding WatchProgress}" IsVisible="{Binding HasProgress}" VerticalOptions="End" HeightRequest="4" />
+        </Grid>
+
+        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="12,10,0,0">
+            <Border WidthRequest="36" HeightRequest="36" StrokeThickness="0" StrokeShape="Ellipse" VerticalOptions="Start"
+                    BackgroundColor="{Binding ChannelColor}">
+                <Label Text="{Binding ChannelInitial}" TextColor="White" FontAttributes="Bold" FontSize="16"
+                       HorizontalOptions="Center" VerticalOptions="Center" />
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnChannel" />
+                </Border.GestureRecognizers>
+            </Border>
+
+            <VerticalStackLayout Grid.Column="1" Spacing="3">
+                <Label Text="{Binding Title}" Style="{StaticResource VideoTitle}" />
+                <Label Text="{Binding MetaText}" Style="{StaticResource Secondary}" MaxLines="1" LineBreakMode="TailTruncation" />
+            </VerticalStackLayout>
+
+            <Label Grid.Column="2" Style="{StaticResource IconButton}" FontFamily="MaterialIcons" Text="&#xe5d4;" FontSize="20" VerticalOptions="Start">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnMenu" />
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
+    </VerticalStackLayout>
+</ContentView>

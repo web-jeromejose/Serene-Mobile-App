@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MyTube.Views.SubscriptionsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:MyTube.Controls"
+    xmlns:m="clr-namespace:MyTube.Models"
+    xmlns:vm="clr-namespace:MyTube.ViewModels"
+    x:DataType="vm:SubscriptionsViewModel"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid ColumnDefinitions="*,Auto" Padding="16,8,4,8">
+            <Label Text="Subscriptions" FontSize="22" FontAttributes="Bold" VerticalOptions="Center" />
+            <Label Grid.Column="1" Style="{StaticResource IconButton}" Text="&#xe8b6;">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSearch" />
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
+
+        <!-- Following some channels -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Videos}" IsVisible="{Binding HasSubscriptions}">
+            <CollectionView.Header>
+                <CollectionView ItemsSource="{Binding Channels}" ItemsLayout="HorizontalList" HeightRequest="96" Margin="8,0,0,8" HorizontalScrollBarVisibility="Never">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="m:ChannelInfo">
+                            <VerticalStackLayout WidthRequest="76" Spacing="6" Padding="4">
+                                <Border WidthRequest="56" HeightRequest="56" StrokeThickness="0" StrokeShape="Ellipse" BackgroundColor="{Binding Color}">
+                                    <Label Text="{Binding Initial}" TextColor="White" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                                <Label Text="{Binding Name}" FontSize="11" HorizontalTextAlignment="Center" MaxLines="1" LineBreakMode="TailTruncation" />
+                                <VerticalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnChannelFilter" />
+                                </VerticalStackLayout.GestureRecognizers>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:VideoItem">
+                    <c:VideoCardView />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Not following anything yet: suggest channels -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Suggested}" IsVisible="{Binding HasSubscriptions, Converter={StaticResource Not}}">
+            <CollectionView.Header>
+                <VerticalStackLayout Padding="24,24,24,16" Spacing="8">
+                    <Label FontFamily="MaterialIcons" Text="&#xe064;" FontSize="56" HorizontalOptions="Center" TextColor="{StaticResource Accent}" />
+                    <Label Text="Don't miss new videos" Style="{StaticResource SectionTitle}" HorizontalOptions="Center" />
+                    <Label Text="Subscribe to channels in your collection. Subscriptions are saved on this phone – no account needed."
+                           Style="{StaticResource Secondary}" FontSize="14" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:ChannelInfo">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="16,8">
+                        <Border WidthRequest="44" HeightRequest="44" StrokeThickness="0" StrokeShape="Ellipse" BackgroundColor="{Binding Color}">
+                            <Label Text="{Binding Initial}" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="{Binding Name}" FontAttributes="Bold" MaxLines="1" LineBreakMode="TailTruncation" />
+                            <Label Text="{Binding CountText}" Style="{StaticResource Secondary}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="2" Text="Subscribe" Clicked="OnSubscribe" VerticalOptions="Center" />
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnOpenChannel" />
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

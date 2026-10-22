@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MyTube.Views.ChannelPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:MyTube.Controls"
+    xmlns:m="clr-namespace:MyTube.Models"
+    xmlns:vm="clr-namespace:MyTube.ViewModels"
+    x:DataType="vm:ChannelViewModel"
+    Title="{Binding Name}"
+    Shell.TabBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+        <VerticalStackLayout Spacing="12" Padding="16,8,16,0">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                <Border WidthRequest="72" HeightRequest="72" StrokeThickness="0" StrokeShape="Ellipse" BackgroundColor="{Binding Color}">
+                    <Label Text="{Binding Initial}" TextColor="White" FontSize="32" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                    <Label Text="{Binding Name}" FontSize="22" FontAttributes="Bold" MaxLines="2" LineBreakMode="TailTruncation" />
+                    <Label Text="{Binding Stats}" Style="{StaticResource Secondary}" />
+                </VerticalStackLayout>
+            </Grid>
+            <Button Text="Subscribe" Command="{Binding SubscribeCommand}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsSubscribed}" Value="True">
+                        <Setter Property="Text" Value="Subscribed" />
+                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}" />
+                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextLight}, Dark={StaticResource TextDark}}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <HorizontalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Tabs}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="m:ChipItem">
+                        <Border Style="{StaticResource Pill}" Padding="14,0" HeightRequest="34">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource TextLight}, Dark={StaticResource TextDark}}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Label Text="{Binding Name}" FontAttributes="Bold" VerticalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTab" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Videos}" Margin="0,12,0,0" IsVisible="{Binding ShowShorts, Converter={StaticResource Not}}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:VideoItem">
+                    <c:VideoRowView />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <Label Text="No videos" Style="{StaticResource Secondary}" HorizontalOptions="Center" Margin="0,40" />
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Shorts}" Margin="16,12,8,0" IsVisible="{Binding ShowShorts}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" VerticalItemSpacing="8" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:VideoItem">
+                    <c:ShortCardView />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <Label Text="No Shorts" Style="{StaticResource Secondary}" HorizontalOptions="Center" Margin="0,40" />
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <!-- White play button, kept inside the adaptive-icon safe zone -->
+    <rect x="128" y="158" width="200" height="140" rx="38" ry="38" fill="#FFFFFF" />
+    <path d="M 206 192 L 266 228 L 206 264 Z" fill="#FF0033" />
+</svg>

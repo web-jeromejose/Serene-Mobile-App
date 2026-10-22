@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MyTube.Views.PlaylistPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:MyTube.Controls"
+    xmlns:m="clr-namespace:MyTube.Models"
+    xmlns:vm="clr-namespace:MyTube.ViewModels"
+    x:DataType="vm:PlaylistViewModel"
+    Title="{Binding Title}"
+    Shell.TabBarIsVisible="False">
+
+    <CollectionView ItemsSource="{Binding Items}">
+        <CollectionView.Header>
+            <VerticalStackLayout Padding="16,8,16,12" Spacing="10">
+                <Border HeightRequest="180" StrokeThickness="0" StrokeShape="RoundRectangle 14"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
+                    <Grid>
+                        <Image Source="{Binding Cover}" Aspect="AspectFill" />
+                        <Label FontFamily="MaterialIcons" Text="&#xe05f;" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Text2Light}, Dark={StaticResource Text2Dark}}"
+                               IsVisible="{Binding Cover, Converter={StaticResource IsNull}}" />
+                    </Grid>
+                </Border>
+                <Label Text="{Binding Title}" FontSize="24" FontAttributes="Bold" />
+                <Label Text="{Binding Subtitle}" Style="{StaticResource Secondary}" />
+                <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="10">
+                    <Button Text="▶  Play all" Command="{Binding PlayAllCommand}" />
+                    <Button Grid.Column="1" Text="Shuffle" Style="{StaticResource SurfaceButton}" Command="{Binding ShuffleCommand}" />
+                    <Button Grid.Column="2" Text="{Binding ClearText}" Style="{StaticResource SurfaceButton}" Command="{Binding ClearOrDeleteCommand}"
+                            IsVisible="{Binding ShowClear}" />
+                </Grid>
+                <Label Text="Swipe a video left to remove it." Style="{StaticResource Secondary}" />
+            </VerticalStackLayout>
+        </CollectionView.Header>
+
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="m:VideoItem">
+                <SwipeView>
+                    <SwipeView.RightItems>
+                        <SwipeItems Mode="Execute">
+                            <SwipeItem Text="Remove" BackgroundColor="{StaticResource Accent}" Invoked="OnRemove" />
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <c:VideoRowView BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}" />
+                </SwipeView>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+
+        <CollectionView.EmptyView>
+            <Label Text="No videos here yet." Style="{StaticResource Secondary}" FontSize="15" HorizontalOptions="Center" Margin="0,40" />
+        </CollectionView.EmptyView>
+    </CollectionView>
+</ContentPage>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- YouTube-style palette -->
+    <Color x:Key="Accent">#FF0033</Color>
+    <Color x:Key="LinkLight">#065FD4</Color>
+    <Color x:Key="LinkDark">#3EA6FF</Color>
+
+    <Color x:Key="BgLight">#FFFFFF</Color>
+    <Color x:Key="BgDark">#0F0F0F</Color>
+    <Color x:Key="SurfaceLight">#F2F2F2</Color>
+    <Color x:Key="SurfaceDark">#272727</Color>
+    <Color x:Key="TextLight">#0F0F0F</Color>
+    <Color x:Key="TextDark">#F1F1F1</Color>
+    <Color x:Key="Text2Light">#606060</Color>
+    <Color x:Key="Text2Dark">#AAAAAA</Color>
+    <Color x:Key="DividerLight">#E5E5E5</Color>
+    <Color x:Key="DividerDark">#3F3F3F</Color>
+
+</ResourceDictionary>

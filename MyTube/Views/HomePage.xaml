@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MyTube.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:MyTube.Controls"
+    xmlns:m="clr-namespace:MyTube.Models"
+    xmlns:vm="clr-namespace:MyTube.ViewModels"
+    x:DataType="vm:HomeViewModel"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <DataTemplate x:Key="VideoTemplate" x:DataType="m:VideoItem">
+            <c:VideoCardView />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ShelfTemplate" x:DataType="m:ShortsShelf">
+            <VerticalStackLayout Padding="0,4,0,18" Spacing="10">
+                <HorizontalStackLayout Padding="12,0" Spacing="8">
+                    <Label FontFamily="MaterialIcons" Text="&#xf06a;" FontSize="24" TextColor="{StaticResource Accent}" VerticalOptions="Center" />
+                    <Label Text="Shorts" Style="{StaticResource SectionTitle}" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <CollectionView ItemsSource="{Binding Items}" ItemsLayout="HorizontalList" HorizontalScrollBarVisibility="Never" Margin="12,0,0,0"
+                                Loaded="OnShelfLoaded">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="m:VideoItem">
+                            <c:ShortCardView />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </DataTemplate>
+
+        <c:FeedTemplateSelector x:Key="FeedSelector" VideoTemplate="{StaticResource VideoTemplate}" ShelfTemplate="{StaticResource ShelfTemplate}" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <!-- Top bar -->
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto" Padding="12,6,4,6">
+            <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                <Border BackgroundColor="{StaticResource Accent}" StrokeThickness="0" StrokeShape="RoundRectangle 7" WidthRequest="34" HeightRequest="24">
+                    <Label FontFamily="MaterialIcons" Text="&#xe037;" TextColor="White" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+                <Label Text="MyTube" FontSize="21" FontAttributes="Bold" CharacterSpacing="-0.5" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <Label Grid.Column="2" Style="{StaticResource IconButton}" Text="&#xe8b6;">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSearch" />
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Grid.Column="3" Style="{StaticResource IconButton}" Text="&#xe8b8;">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSettings" />
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
+
+        <!-- Category chips -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Chips}" ItemsLayout="HorizontalList" HorizontalScrollBarVisibility="Never"
+                        HeightRequest="48" Margin="12,0,0,6">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:ChipItem">
+                    <Grid Padding="0,6,8,6">
+                        <Border x:Name="ChipBorder" Style="{StaticResource Pill}" Padding="12,0" HeightRequest="34">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource TextLight}, Dark={StaticResource TextDark}}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Label Text="{Binding Name}" FontAttributes="Bold" VerticalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnChip" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Feed -->
+        <RefreshView Grid.Row="2" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+            <CollectionView x:Name="FeedList" ItemsSource="{Binding Feed}" ItemTemplate="{StaticResource FeedSelector}"
+                            RemainingItemsThreshold="3" RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="32,80" Spacing="12" HorizontalOptions="Center">
+                        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />
+                        <Label Text="Nothing here yet" Style="{StaticResource SectionTitle}" HorizontalOptions="Center" IsVisible="{Binding IsEmpty}" />
+                        <Label Text="Tap + to add YouTube links or upload your own videos." Style="{StaticResource Secondary}" FontSize="14"
+                               HorizontalTextAlignment="Center" IsVisible="{Binding IsEmpty}" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

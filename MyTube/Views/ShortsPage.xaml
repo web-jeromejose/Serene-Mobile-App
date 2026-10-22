@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MyTube.Views.ShortsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:MyTube.Controls"
+    xmlns:vm="clr-namespace:MyTube.ViewModels"
+    x:DataType="vm:ShortsViewModel"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="Black"
+    SafeAreaEdges="None">
+
+    <ContentPage.Resources>
+        <Style x:Key="ShortAction" TargetType="Label">
+            <Setter Property="FontFamily" Value="MaterialIcons" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="Shadow">
+                <Shadow Brush="Black" Opacity="0.5" Radius="6" Offset="0,1" />
+            </Setter>
+        </Style>
+        <Style x:Key="ShortActionText" TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid SafeAreaEdges="None" BackgroundColor="Black">
+        <!-- The video -->
+        <Grid x:Name="Stage" SafeAreaEdges="None">
+            <c:VideoPlayerView x:Name="Player" ShortsMode="True" />
+        </Grid>
+
+        <!-- Tap = pause/play, swipe up/down = next/previous -->
+        <BoxView x:Name="TouchLayer" Color="Transparent">
+            <BoxView.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnTapped" />
+                <PanGestureRecognizer PanUpdated="OnPanUpdated" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
+
+        <Border x:Name="PausedBadge" IsVisible="False" InputTransparent="True" BackgroundColor="#66000000" StrokeThickness="0"
+                StrokeShape="Ellipse" WidthRequest="84" HeightRequest="84" HorizontalOptions="Center" VerticalOptions="Center">
+            <Label FontFamily="MaterialIcons" Text="&#xe037;" FontSize="56" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
+        </Border>
+
+        <!-- Overlay UI (stays clear of the status bar and tab bar) -->
+        <Grid x:Name="Overlay" SafeAreaEdges="Container" RowDefinitions="Auto,*,Auto,Auto" InputTransparent="True" CascadeInputTransparent="False">
+            <Grid ColumnDefinitions="*,Auto" Padding="16,8,8,0">
+                <Label Text="Shorts" TextColor="White" FontSize="22" FontAttributes="Bold" VerticalOptions="Center" />
+                <Label Grid.Column="1" Style="{StaticResource IconButton}" Text="&#xe8b6;" TextColor="White">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSearch" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+
+            <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Padding="14,0,8,14" ColumnSpacing="12">
+                <!-- Channel + title -->
+                <VerticalStackLayout Spacing="10" VerticalOptions="End">
+                    <HorizontalStackLayout Spacing="10">
+                        <Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" StrokeShape="Ellipse" BackgroundColor="{Binding Current.ChannelColor}">
+                            <Label Text="{Binding Current.ChannelInitial}" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenChannelCommand}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Label Text="{Binding Current.Channel, StringFormat='@{0}'}" TextColor="White" FontAttributes="Bold" VerticalOptions="Center"
+                               MaxLines="1" LineBreakMode="TailTruncation" MaximumWidthRequest="170">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenChannelCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="12,5" VerticalOptions="Center">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSubscribed}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="#55FFFFFF" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Label FontSize="13" FontAttributes="Bold" TextColor="Black" Text="Subscribe">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsSubscribed}" Value="True">
+                                        <Setter Property="Text" Value="Subscribed" />
+                                        <Setter Property="TextColor" Value="White" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SubscribeCommand}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </HorizontalStackLayout>
+                    <Label Text="{Binding Current.Title}" TextColor="White" FontSize="15" MaxLines="2" LineBreakMode="TailTruncation" />
+                </VerticalStackLayout>
+
+                <!-- Actions -->
+                <VerticalStackLayout Grid.Column="1" Spacing="18" VerticalOptions="End" WidthRequest="60">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Style="{StaticResource ShortAction}" Text="&#xe8dc;">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource LinkDark}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                        <Label Style="{StaticResource ShortActionText}" Text="Like" />
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LikeCommand}" />
+                        </VerticalStackLayout.GestureRecognizers>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="2">
+                        <Label Style="{StaticResource ShortAction}" Text="&#xe8db;">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsDisliked}" Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource LinkDark}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                        <Label Style="{StaticResource ShortActionText}" Text="Dislike" />
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DislikeCommand}" />
+                        </VerticalStackLayout.GestureRecognizers>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="2">
+                        <Label Style="{StaticResource ShortAction}" Text="&#xe0b9;" />
+                        <Label Style="{StaticResource ShortActionText}" Text="{Binding CommentCount}" />
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding CommentsCommand}" />
+                        </VerticalStackLayout.GestureRecognizers>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="2">
+                        <Label Style="{StaticResource ShortAction}" Text="&#xe80d;" />
+                        <Label Style="{StaticResource ShortActionText}" Text="Share" />
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShareCommand}" />
+                        </VerticalStackLayout.GestureRecognizers>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="2">
+                        <Label Style="{StaticResource ShortAction}" Text="&#xe924;">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsSaved}" Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource LinkDark}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                        <Label Style="{StaticResource ShortActionText}" Text="Save" />
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SaveCommand}" />
+                        </VerticalStackLayout.GestureRecognizers>
+                    </VerticalStackLayout>
+                    <Label Style="{StaticResource ShortAction}" Text="&#xe5d4;" FontSize="26">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding MoreCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </VerticalStackLayout>
+            </Grid>
+
+            <ProgressBar x:Name="Progress" Grid.Row="3" HeightRequest="3" ProgressColor="{StaticResource Accent}" BackgroundColor="#44FFFFFF" />
+        </Grid>
+
+        <!-- Nothing to show -->
+        <VerticalStackLayout IsVisible="{Binding IsEmpty}" Spacing="12" VerticalOptions="Center" Padding="32" BackgroundColor="Black">
+            <Label FontFamily="MaterialIcons" Text="&#xf06a;" FontSize="64" TextColor="{StaticResource Accent}" HorizontalOptions="Center" />
+            <Label Text="No Shorts yet" TextColor="White" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Label Text="Add youtube.com/shorts links or upload a vertical video from the + tab." TextColor="#AAAAAA" HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

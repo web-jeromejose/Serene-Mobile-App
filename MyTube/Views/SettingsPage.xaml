@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MyTube.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:MyTube.ViewModels"
+    x:DataType="vm:SettingsViewModel"
+    Title="Settings"
+    Shell.TabBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,8,16,32" Spacing="14">
+
+            <Label Text="Your channel" Style="{StaticResource SectionTitle}" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Name shown on your uploads and comments" Style="{StaticResource Secondary}" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Border Style="{StaticResource InputBox}" BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}">
+                            <Entry Text="{Binding DisplayName}" MaxLength="40" ReturnCommand="{Binding SaveNameCommand}" />
+                        </Border>
+                        <Button Grid.Column="1" Text="Save" Command="{Binding SaveNameCommand}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="Appearance &amp; playback" Style="{StaticResource SectionTitle}" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Theme" VerticalOptions="Center" FontAttributes="Bold" />
+                        <Picker Grid.Column="1" ItemsSource="{Binding Themes}" SelectedIndex="{Binding ThemeIndex}" MinimumWidthRequest="170" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout>
+                            <Label Text="Autoplay" FontAttributes="Bold" />
+                            <Label Text="Play the next video when one finishes" Style="{StaticResource Secondary}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" IsToggled="{Binding Autoplay}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout>
+                            <Label Text="Auto-scroll Shorts" FontAttributes="Bold" />
+                            <Label Text="Go to the next Short instead of looping" Style="{StaticResource Secondary}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" IsToggled="{Binding ShortsAutoAdvance}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout>
+                            <Label Text="Mix in sample &amp; bundled own videos" FontAttributes="Bold" />
+                            <Label Text="Videos you upload in the app always show" Style="{StaticResource Secondary}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" IsToggled="{Binding IncludeOwn}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="Online video list" Style="{StaticResource SectionTitle}" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Paste a link to a catalog.json (or a .txt with one YouTube link per line), e.g. a GitHub Gist 'raw' link. Update it any time without rebuilding the app."
+                           Style="{StaticResource Secondary}" FontSize="13" />
+                    <Border Style="{StaticResource InputBox}" BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}">
+                        <Entry Placeholder="https://…/catalog.json" Text="{Binding RemoteUrl}" Keyboard="Url" />
+                    </Border>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Label Text="{Binding SyncStatus}" Style="{StaticResource Secondary}" VerticalOptions="Center" />
+                        <Button Grid.Column="1" Text="Sync now" Command="{Binding SyncCommand}" IsEnabled="{Binding IsSyncing, Converter={StaticResource Not}}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="Your data" Style="{StaticResource SectionTitle}" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Button Text="Clear watch history" Style="{StaticResource SurfaceButton}" BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}" Command="{Binding ClearHistoryCommand}" />
+                    <Button Text="Clear search history" Style="{StaticResource SurfaceButton}" BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}" Command="{Binding ClearSearchesCommand}" />
+                    <Button Text="Back up library (share file)" Style="{StaticResource SurfaceButton}" BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}" Command="{Binding ExportCommand}" />
+                    <Button Text="Restore library from file" Style="{StaticResource SurfaceButton}" BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}" Command="{Binding ImportCommand}" />
+                    <Button Text="Reset MyTube" Style="{StaticResource AccentButton}" Command="{Binding ResetAllCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="{Binding Version}" Style="{StaticResource Secondary}" HorizontalOptions="Center" Margin="0,12,0,0" />
+            <Label Text="No account, no sign-in. Likes, history, playlists and uploads are stored only on this device. YouTube videos play through YouTube's official embedded player."
+                   Style="{StaticResource Secondary}" HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

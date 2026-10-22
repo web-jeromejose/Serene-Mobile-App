@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <!-- YouTube requires embedding apps to send a Referer; this keeps the app's origin in it. -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
+    #player { position: absolute; inset: 0; width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+  <script>
+    // Values replaced by VideoPlayerView before loading.
+    var cfg = { videoId: '__VIDEO_ID__', start: __START__, controls: __CONTROLS__, loop: __LOOP__ };
+    var player = null, ready = false, lastError = 0;
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        width: '100%',
+        height: '100%',
+        videoId: cfg.videoId,
+        playerVars: {
+          autoplay: 1, playsinline: 1, controls: cfg.controls, rel: 0, fs: 1,
+          iv_load_policy: 3, start: Math.floor(cfg.start), enablejsapi: 1,
+          origin: window.location.origin, widget_referrer: window.location.href
+        },
+        events: {
+          onReady: function (e) { ready = true; e.target.playVideo(); },
+          onStateChange: function (e) {
+            if (e.data === 0 && cfg.loop) { player.seekTo(0, true); player.playVideo(); }
+          },
+          onError: function (e) { lastError = e.data || -1; }
+        }
+      });
+    }
+
+    // Polled by the app: "state|currentTime|duration|error".
+    function appState() {
+      if (!player || !ready) return 'loading|0|0|' + lastError;
+      var s = player.getPlayerState();
+      var t = player.getCurrentTime() || 0;
+      var d = player.getDuration() || 0;
+      return s + '|' + t.toFixed(1) + '|' + d.toFixed(1) + '|' + lastError;
+    }
+    function appLoad(id, start) {
+      lastError = 0; cfg.videoId = id; cfg.start = start || 0;
+      if (player && ready) player.loadVideoById({ videoId: id, startSeconds: cfg.start });
+      return 'ok';
+    }
+    function appPlay() { if (player && ready) player.playVideo(); return 'ok'; }
+    function appPause() { if (player && ready) player.pauseVideo(); return 'ok'; }
+    function appSeek(s) { if (player && ready) player.seekTo(s, true); return 'ok'; }
+    function appLoop(v) { cfg.loop = !!v; return 'ok'; }
+  </script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>

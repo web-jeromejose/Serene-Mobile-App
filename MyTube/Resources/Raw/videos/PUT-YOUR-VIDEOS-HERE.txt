@@ -1,0 +1,12 @@
+Drop your own video files (.mp4, .m4v, .mov, .webm, .mkv) into this folder and rebuild.
+
+They appear automatically in Home ("Your videos") – mixed randomly with your YouTube links.
+Thumbnails and durations are created on the phone the first time the app starts.
+
+To set a title, mark a vertical clip as a Short, or pick a category, add an entry in
+Resources/Raw/catalog.json, for example:
+
+  { "file": "videos/beach-day.mp4", "title": "Beach day", "category": "Travel", "short": true }
+
+Tip: large files make the app (APK) bigger. For many or long videos, host them online and
+use "url" entries in catalog.json, or upload them from the phone with the + tab.

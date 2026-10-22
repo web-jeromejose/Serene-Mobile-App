@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MyTube.Views.PlayerPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:MyTube.Controls"
+    xmlns:m="clr-namespace:MyTube.Models"
+    xmlns:vm="clr-namespace:MyTube.ViewModels"
+    x:DataType="vm:PlayerViewModel"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <Style x:Key="ActionPill" TargetType="Border" BasedOn="{StaticResource Pill}">
+            <Setter Property="Padding" Value="12,7" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
+        <Style x:Key="ActionIcon" TargetType="Label">
+            <Setter Property="FontFamily" Value="MaterialIconsOutlined" />
+            <Setter Property="FontSize" Value="19" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+        <Style x:Key="ActionText" TargetType="Label">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid x:Name="Root" RowDefinitions="Auto,*" BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}">
+
+        <!-- Player -->
+        <Grid x:Name="PlayerHost" BackgroundColor="Black">
+            <c:VideoPlayerView x:Name="Player" />
+
+            <Label x:Name="BackButton" Style="{StaticResource IconButton}" FontFamily="MaterialIcons" Text="&#xe5cf;" TextColor="White" FontSize="30"
+                   HorizontalOptions="Start" VerticalOptions="Start" Margin="4">
+                <Label.Shadow>
+                    <Shadow Brush="Black" Opacity="0.6" Radius="6" />
+                </Label.Shadow>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBack" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <!-- "Up next" countdown when autoplay is on -->
+            <Grid x:Name="UpNextOverlay" IsVisible="False" BackgroundColor="#DD000000" Padding="20" RowDefinitions="Auto,Auto,Auto" RowSpacing="10"
+                  VerticalOptions="Fill">
+                <Label x:Name="UpNextCountdown" TextColor="#AAAAAA" FontSize="13" HorizontalOptions="Center" />
+                <Label Grid.Row="1" x:Name="UpNextTitle" TextColor="White" FontSize="16" FontAttributes="Bold" MaxLines="2"
+                       LineBreakMode="TailTruncation" HorizontalTextAlignment="Center" />
+                <HorizontalStackLayout Grid.Row="2" Spacing="12" HorizontalOptions="Center">
+                    <Button Text="Cancel" Clicked="OnCancelUpNext" BackgroundColor="#33FFFFFF" TextColor="White" />
+                    <Button Text="Play now" Clicked="OnPlayUpNext" BackgroundColor="White" TextColor="Black" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Grid>
+
+        <!-- Details + Up next -->
+        <CollectionView x:Name="DetailsList" Grid.Row="1" ItemsSource="{Binding UpNext}">
+            <CollectionView.Header>
+                <VerticalStackLayout Padding="0,12,0,4" Spacing="12">
+
+                    <!-- Title & meta -->
+                    <VerticalStackLayout Padding="12,0" Spacing="6">
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleDescriptionCommand}" />
+                        </VerticalStackLayout.GestureRecognizers>
+                        <Label Text="{Binding Video.Title}" FontSize="18" FontAttributes="Bold" />
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="{Binding Video.MetaText}" Style="{StaticResource Secondary}" />
+                            <Label Text="...more" Style="{StaticResource Secondary}" FontAttributes="Bold" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Channel row -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="12,0">
+                        <Border WidthRequest="38" HeightRequest="38" StrokeThickness="0" StrokeShape="Ellipse" BackgroundColor="{Binding Video.ChannelColor}">
+                            <Label Text="{Binding Video.ChannelInitial}" TextColor="White" FontAttributes="Bold" FontSize="17" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="{Binding Video.Channel}" FontAttributes="Bold" FontSize="15" MaxLines="1" LineBreakMode="TailTruncation" />
+                            <Label Text="{Binding ChannelVideoCount, StringFormat='{0} videos in MyTube'}" Style="{StaticResource Secondary}" />
+                        </VerticalStackLayout>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenChannelCommand}" />
+                        </Grid.GestureRecognizers>
+                        <Button Grid.Column="2" Text="Subscribe" Command="{Binding SubscribeCommand}" VerticalOptions="Center">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding IsSubscribed}" Value="True">
+                                    <Setter Property="Text" Value="Subscribed" />
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}" />
+                                    <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextLight}, Dark={StaticResource TextDark}}" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </Grid>
+
+                    <!-- Actions -->
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout Padding="12,0">
+                            <Border Style="{StaticResource ActionPill}">
+                                <HorizontalStackLayout Spacing="14">
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Label Style="{StaticResource ActionIcon}" Text="&#xe8dc;">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="True">
+                                                    <Setter Property="FontFamily" Value="MaterialIcons" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Label Style="{StaticResource ActionText}" Text="Like" />
+                                        <HorizontalStackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding LikeCommand}" />
+                                        </HorizontalStackLayout.GestureRecognizers>
+                                    </HorizontalStackLayout>
+                                    <BoxView WidthRequest="1" HeightRequest="20" Color="{AppThemeBinding Light={StaticResource DividerLight}, Dark={StaticResource DividerDark}}" />
+                                    <Label Style="{StaticResource ActionIcon}" Text="&#xe8db;">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsDisliked}" Value="True">
+                                                <Setter Property="FontFamily" Value="MaterialIcons" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding DislikeCommand}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </HorizontalStackLayout>
+                            </Border>
+                            <Border Style="{StaticResource ActionPill}">
+                                <HorizontalStackLayout Spacing="6">
+                                    <Label Style="{StaticResource ActionIcon}" Text="&#xe80d;" />
+                                    <Label Style="{StaticResource ActionText}" Text="Share" />
+                                </HorizontalStackLayout>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ShareCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border Style="{StaticResource ActionPill}">
+                                <HorizontalStackLayout Spacing="6">
+                                    <Label Style="{StaticResource ActionIcon}" Text="&#xe924;">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsSaved}" Value="True">
+                                                <Setter Property="FontFamily" Value="MaterialIcons" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <Label Style="{StaticResource ActionText}" Text="Watch later" />
+                                </HorizontalStackLayout>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SaveCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border Style="{StaticResource ActionPill}">
+                                <HorizontalStackLayout Spacing="6">
+                                    <Label Style="{StaticResource ActionIcon}" Text="&#xe03b;" />
+                                    <Label Style="{StaticResource ActionText}" Text="Save" />
+                                </HorizontalStackLayout>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding AddToPlaylistCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border Style="{StaticResource ActionPill}" IsVisible="{Binding Video.IsYouTube}">
+                                <HorizontalStackLayout Spacing="6">
+                                    <Label Style="{StaticResource ActionIcon}" Text="&#xe89e;" />
+                                    <Label Style="{StaticResource ActionText}" Text="YouTube" />
+                                </HorizontalStackLayout>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding OpenInYouTubeCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border Style="{StaticResource ActionPill}">
+                                <Label Style="{StaticResource ActionIcon}" FontFamily="MaterialIcons" Text="&#xe5d4;" />
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding MoreCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+
+                    <!-- Description -->
+                    <Border Style="{StaticResource Card}" Margin="12,0" Padding="12" IsVisible="{Binding IsDescriptionExpanded}">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="{Binding Video.Category, StringFormat='Category: {0}'}" FontAttributes="Bold" FontSize="13" />
+                            <Label Text="{Binding Video.Description}" FontSize="14" />
+                            <Label Text="{Binding Video.ShareUrl}" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource LinkLight}, Dark={StaticResource LinkDark}}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Comments (saved on this device) -->
+                    <Border Style="{StaticResource Card}" Margin="12,0" Padding="12">
+                        <VerticalStackLayout Spacing="10">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="{Binding CommentsHeader}" FontAttributes="Bold" FontSize="15" />
+                                <Label Grid.Column="1" Text="Saved on this device" Style="{StaticResource Secondary}" />
+                            </Grid>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Border WidthRequest="28" HeightRequest="28" StrokeThickness="0" StrokeShape="Ellipse" BackgroundColor="{Binding DisplayColor}">
+                                    <Label Text="{Binding DisplayInitial}" TextColor="White" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                                <Entry Grid.Column="1" Placeholder="Add a comment…" Text="{Binding NewComment}" ReturnCommand="{Binding PostCommentCommand}" FontSize="14" />
+                                <Label Grid.Column="2" Style="{StaticResource IconButton}" FontFamily="MaterialIcons" Text="&#xe163;" FontSize="22">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding PostCommentCommand}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </Grid>
+                            <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Comments}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="m:LocalComment">
+                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                            <Border WidthRequest="28" HeightRequest="28" StrokeThickness="0" StrokeShape="Ellipse" BackgroundColor="{Binding Color}" VerticalOptions="Start">
+                                                <Label Text="{Binding Initial}" TextColor="White" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                                            </Border>
+                                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                                <Label Text="{Binding Header}" Style="{StaticResource Secondary}" />
+                                                <Label Text="{Binding Text}" FontSize="14" />
+                                            </VerticalStackLayout>
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="OnCommentDoubleTapped" />
+                                            </Grid.GestureRecognizers>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Up next header -->
+                    <Grid ColumnDefinitions="*,Auto,Auto" Padding="12,4,12,0" ColumnSpacing="8">
+                        <Label Text="Up next" Style="{StaticResource SectionTitle}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="Autoplay" Style="{StaticResource Secondary}" FontSize="13" VerticalOptions="Center" />
+                        <Switch Grid.Column="2" IsToggled="{Binding Autoplay}" VerticalOptions="Center" />
+                    </Grid>
+                </VerticalStackLayout>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:VideoItem">
+                    <c:VideoRowView />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+                <BoxView HeightRequest="24" Color="Transparent" />
+            </CollectionView.Footer>
+        </CollectionView>
+    </Grid>
+</ContentPage>

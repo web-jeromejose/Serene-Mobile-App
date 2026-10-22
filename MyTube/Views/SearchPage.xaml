@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MyTube.Views.SearchPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:MyTube.Controls"
+    xmlns:m="clr-namespace:MyTube.Models"
+    xmlns:vm="clr-namespace:MyTube.ViewModels"
+    x:DataType="vm:SearchViewModel"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <!-- Search bar -->
+        <Grid ColumnDefinitions="Auto,*" Padding="4,6,12,6" ColumnSpacing="4">
+            <Label Style="{StaticResource IconButton}" FontFamily="MaterialIcons" Text="&#xe5c4;">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBack" />
+                </Label.GestureRecognizers>
+            </Label>
+            <Border Grid.Column="1" Style="{StaticResource Pill}" Padding="14,0" HeightRequest="40">
+                <Entry x:Name="QueryEntry" Placeholder="Search MyTube or paste a YouTube link" Text="{Binding Query}"
+                       ReturnType="Search" ReturnCommand="{Binding SubmitCommand}" ClearButtonVisibility="WhileEditing" VerticalOptions="Center" />
+            </Border>
+        </Grid>
+
+        <!-- Pasted a link? Offer to add it. -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="12,4" IsVisible="{Binding IsLinkDetected}">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                <Label FontFamily="MaterialIcons" Text="&#xe157;" FontSize="26" VerticalOptions="Center" TextColor="{StaticResource Accent}" />
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                    <Label Text="YouTube link detected" FontAttributes="Bold" />
+                    <Label Text="Add it to MyTube and play it" Style="{StaticResource Secondary}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="2" Text="Add" Style="{StaticResource AccentButton}" Command="{Binding AddLinkCommand}" />
+            </Grid>
+        </Border>
+
+        <!-- Suggestions / recent searches -->
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Suggestions}" IsVisible="{Binding ShowSuggestions}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,0,4,0" ColumnSpacing="16" HeightRequest="48">
+                        <Label Style="{StaticResource Icon}" Text="&#xe889;" FontSize="20" />
+                        <Label Grid.Column="1" Text="{Binding .}" FontSize="15" VerticalOptions="Center" MaxLines="1" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="2" Style="{StaticResource IconButton}" Text="&#xe5cd;" FontSize="18">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnRemoveSuggestion" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSuggestion" />
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Results -->
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" IsVisible="{Binding ShowResults}">
+            <CollectionView ItemsSource="{Binding Filters}" ItemsLayout="HorizontalList" HeightRequest="48" Margin="12,0,0,4" HorizontalScrollBarVisibility="Never">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="m:ChipItem">
+                        <Grid Padding="0,6,8,6">
+                            <Border Style="{StaticResource Pill}" Padding="12,0" HeightRequest="34">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource TextLight}, Dark={StaticResource TextDark}}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Label Text="{Binding Name}" FontAttributes="Bold" VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnFilter" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Results}">
+                <CollectionView.Header>
+                    <Label Text="{Binding ResultsHeader}" Style="{StaticResource Secondary}" Margin="12,0,0,8" />
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="m:VideoItem">
+                        <c:VideoRowView />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="32,60" Spacing="8">
+                        <Label Text="No results" Style="{StaticResource SectionTitle}" HorizontalOptions="Center" />
+                        <Label Text="Try different words, or paste a YouTube link to add it." Style="{StaticResource Secondary}" FontSize="14" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </Grid>
+    </Grid>
+</ContentPage>

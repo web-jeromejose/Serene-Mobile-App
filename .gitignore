@@ -1,0 +1,10 @@
+bin/
+obj/
+artifacts/
+.vs/
+*.user
+*.suo
+.DS_Store
+
+# App signing key: private, back it up, never share it publicly
+MyTube/signing/

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MyTube.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:MyTube.Views"
+    Title="MyTube"
+    Shell.FlyoutBehavior="Disabled">
+
+    <TabBar>
+        <ShellContent Title="Home" Route="home" ContentTemplate="{DataTemplate views:HomePage}">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe88a;" Size="24" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Title="Shorts" Route="shorts" ContentTemplate="{DataTemplate views:ShortsPage}">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xf06a;" Size="24" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Title="Create" Route="create" ContentTemplate="{DataTemplate views:AddVideoPage}">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIconsOutlined" Glyph="&#xe147;" Size="28" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Title="Subscriptions" Route="subscriptions" ContentTemplate="{DataTemplate views:SubscriptionsPage}">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe064;" Size="24" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Title="You" Route="library" ContentTemplate="{DataTemplate views:LibraryPage}">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe04a;" Size="24" />
+            </ShellContent.Icon>
+        </ShellContent>
+    </TabBar>
+
+</Shell>
