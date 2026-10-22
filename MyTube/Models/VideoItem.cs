@@ -99,6 +99,7 @@ public sealed class VideoItem : ObservableObject
     [JsonIgnore] public bool IsShort => Format == VideoFormat.Short;
     [JsonIgnore] public bool IsOwn => Source == VideoSource.Own;
     [JsonIgnore] public bool IsYouTube => Source == VideoSource.YouTube;
+    [JsonIgnore] public bool IsPortrait { get; set; }
     [JsonIgnore] public bool HasDuration => !IsShort && DurationSeconds > 0;
     [JsonIgnore] public string DurationText => Formatters.Duration(DurationSeconds);
     [JsonIgnore] public string ChannelInitial => Formatters.Initial(Channel);

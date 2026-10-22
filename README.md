@@ -27,7 +27,7 @@ Comments are your own local notes; the app doesn't read or post YouTube comments
 ## Add your videos
 
 ### 1. YouTube videos and Shorts
-Edit [`MyTube/Resources/Raw/catalog.json`](MyTube/Resources/Raw/catalog.json). It ships with 43 samples (31 YouTube videos, 9 Shorts and 3 own-video examples), all checked as playable in other apps. Replace them with your own:
+YouTube support is retained for online playback. Add a YouTube URL from the app's **Create (+)** screen, or add it to an online catalog. YouTube playback requires an internet connection; local MP4 videos continue to work offline.
 
 ```json
 { "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "category": "Music" },
@@ -37,8 +37,15 @@ Edit [`MyTube/Resources/Raw/catalog.json`](MyTube/Resources/Raw/catalog.json). I
 Title and channel are optional; the app fetches them from YouTube. `/shorts/` links go to the Shorts feed.
 You can also add links inside the app (**+** tab), including many at once.
 
-### 2. Your own videos
-Pick whichever suits you:
+### 2. Bundled MP4 videos
+
+Copy `.mp4` files into [`MyTube/Resources/Raw/videos/`](MyTube/Resources/Raw/videos/). No `catalog.json` entry is required. The folder is scanned automatically when the app starts.
+
+The app loads only `.mp4` files, generates friendly titles and descriptions, assigns the `SereneAppTube` channel, detects thumbnails and duration, and classifies videos shorter than 11 seconds as Shorts. Local videos play at `0.8×` by default.
+
+For best Redmi A3 compatibility, use H.264 8-bit video with AAC audio, `yuv420p`, and a maximum 1280-pixel dimension.
+
+### 3. Upload or host videos
 
 - **Bundle them:** drop `.mp4` files into [`MyTube/Resources/Raw/videos/`](MyTube/Resources/Raw/videos/) and rebuild. They show up automatically with generated titles and descriptions. MP4 files shorter than 11 seconds are automatically shown as Shorts.
 - **Upload on the phone:** **+** tab → *Choose video* or *Record*.
@@ -46,10 +53,25 @@ Pick whichever suits you:
 
 The three sample "own videos" in the catalog are placeholder clips hosted online. Delete them when you add yours.
 
-### 3. Update the list without rebuilding (optional)
+### 4. Update the list without rebuilding (optional)
 Put a `catalog.json` (or a `.txt` with one YouTube link per line) online, for example in a GitHub Gist. Then paste its **raw** link in **Settings → Online video list → Sync now**. The app re-syncs every time it starts.
 
 ## Install and run
+
+### Playback speed
+
+Local videos use `0.8×` playback by default. YouTube videos request `0.8×` through the YouTube IFrame API; if that exact rate is unavailable, the closest supported rate is selected.
+
+### Convert videos for Redmi compatibility
+
+- [`convert-mov-to-mp4.cmd`](convert-mov-to-mp4.cmd) converts MOV files to compatible MP4 files and deletes the MOV only after successful conversion.
+- [`convert-all-mp4-compatible.cmd`](convert-all-mp4-compatible.cmd) reconverts existing MP4 files using H.264 Main, 8-bit `yuv420p`, AAC, level 4.0, and a maximum 1280-pixel dimension.
+
+Both scripts check duplicate or already-converted filenames before processing and preserve files when conversion fails.
+
+### Git and personal files
+
+Personal videos, personal images, signing keys, and temporary build output are excluded by `.gitignore`. Source code, configuration, scripts, and the placeholder video-folder file remain trackable.
 
 The project is in [`MyTube/`](MyTube/) (solution `MyTube.slnx`). It targets **.NET 10 MAUI** and runs on **Android 8.0 (API 26) or newer**.
 

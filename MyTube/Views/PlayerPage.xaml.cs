@@ -20,6 +20,7 @@ public partial class PlayerPage : ContentPage
             if (DetailsList.ItemsSource is not null && _vm.UpNext.Count > 0)
                 DetailsList.ScrollTo(0, position: ScrollToPosition.Start, animate: false);
             await Player.LoadAsync(video, resume);
+            ApplyVideoSize(video);
         };
 
         Player.Started += (_, _) => _vm.OnStarted();
@@ -58,16 +59,23 @@ public partial class PlayerPage : ContentPage
         BackButton.IsVisible = !landscape;
         Root.SafeAreaEdges = landscape ? new Microsoft.Maui.SafeAreaEdges(SafeAreaRegions.None) : new Microsoft.Maui.SafeAreaEdges(SafeAreaRegions.Container);
         Grid.SetRowSpan(PlayerHost, landscape ? 2 : 1);
+        ApplyVideoSize(_vm.Video);
 #if ANDROID
         MyTube.Droid.SystemBars.HideForLandscape(landscape);
 #endif
+    }
+
+    void ApplyVideoSize(VideoItem? video)
+    {
+        var portrait = !LayoutMetrics.Current.IsLandscape && video?.IsPortrait == true;
+        PlayerHost.MaximumHeightRequest = portrait ? LayoutMetrics.Current.PlayerHeight * 0.5 : -1;
     }
 
     void OnEnded()
     {
         var next = _vm.NextVideo;
         if (!_vm.Autoplay || next is null) return;
-        _countdown = 5;
+        _countdown = 2;
         UpNextTitle.Text = next.Title;
         UpNextCountdown.Text = $"Up next in {_countdown}";
         UpNextOverlay.IsVisible = true;

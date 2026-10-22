@@ -277,6 +277,7 @@ public sealed class CatalogService(LibraryService library, SettingsService setti
             {
                 var isShort = info.DurationSeconds < 11;
                 v.DurationSeconds = info.DurationSeconds;
+                v.IsPortrait = info.Height > info.Width && info.Width > 0;
                 v.Format = isShort ? VideoFormat.Short : VideoFormat.Video;
                 v.Category = isShort ? "Shorts" : "My videos";
                 if (v.Id.StartsWith("asset:", StringComparison.Ordinal))
