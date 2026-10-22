@@ -1,77 +1,143 @@
 {
-  // ============================================================================
-  //  MyTube catalog – edit this list, rebuild, and the app shows your videos.
-  //
-  //  Each entry needs ONE of:
-  //    "url":  a YouTube link (watch?v=, youtu.be/, /shorts/, /live/ …)
-  //            or a direct link to your own video file (.mp4, .m3u8 …)
-  //    "file": a video you put in Resources/Raw/videos, e.g. "videos/holiday.mp4"
-  //
-  //  Optional: title, channel, category, description, thumbnail, tags,
-  //            short (true = show in Shorts), own (true = your video),
-  //            views, published ("2024-05-31"), duration ("3:45").
-  //  YouTube titles/channels are fetched automatically if you leave them out.
-  //  Videos dropped into Resources/Raw/videos appear even without an entry here.
-  // ============================================================================
-  "channelName": "My Channel",
+  "channelName": "Serene App Tube",
   "videos": [
-    // ---------- Your own videos (examples hosted online – replace with yours) ----------
-    { "url": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4", "title": "Flower in the breeze (sample own video)", "own": true, "category": "My videos", "description": "Example of one of your own videos hosted online. Replace it in Resources/Raw/catalog.json." },
-    { "url": "https://test-videos.co.uk/vids/jellyfish/mp4/h264/720/Jellyfish_720_10s_2MB.mp4", "title": "Jellyfish clip (sample own video)", "own": true, "category": "My videos" },
-    { "url": "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_2MB.mp4", "title": "Bunny trailer (sample own video)", "own": true, "category": "My videos" },
-
-    // ---------- Film & Animation ----------
-    { "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ", "title": "Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film", "channel": "Blender", "category": "Film & Animation" },
-    { "url": "https://www.youtube.com/watch?v=eRsGyueVLvQ", "title": "Sintel - Open Movie by Blender Foundation", "channel": "Blender", "category": "Film & Animation" },
-    { "url": "https://www.youtube.com/watch?v=R6MlUcmOul8", "title": "Tears of Steel - Blender VFX Open Movie", "channel": "Blender", "category": "Film & Animation" },
-    { "url": "https://www.youtube.com/watch?v=WhWc3b3KhnY", "title": "Spring - Blender Open Movie", "channel": "Blender Studio", "category": "Film & Animation" },
-    { "url": "https://www.youtube.com/watch?v=Y-rmzh0PI3c", "title": "Cosmos Laundromat - First Cycle. Official Blender Foundation release.", "channel": "Blender", "category": "Film & Animation" },
-    { "url": "https://www.youtube.com/watch?v=mN0zPOpADL4", "title": "Agent 327: Operation Barbershop", "channel": "Blender Studio", "category": "Film & Animation" },
-
-    // ---------- Music ----------
-    { "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)", "channel": "Rick Astley", "category": "Music" },
-    { "url": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ", "title": "Queen – Bohemian Rhapsody (Official Video Remastered)", "channel": "Queen Official", "category": "Music" },
-    { "url": "https://www.youtube.com/watch?v=60ItHLz5WEA", "title": "Alan Walker - Faded", "channel": "Alan Walker", "category": "Music" },
-    { "url": "https://www.youtube.com/watch?v=dvgZkm1xWPE", "title": "Coldplay - Viva La Vida (Official Video)", "channel": "Coldplay", "category": "Music" },
-    { "url": "https://www.youtube.com/watch?v=djV11Xbc914", "title": "a-ha - Take On Me (Official Video) [4K]", "channel": "a-ha", "category": "Music" },
-    { "url": "https://www.youtube.com/watch?v=9bZkp7q19f0", "title": "PSY - GANGNAM STYLE(강남스타일) M/V", "channel": "officialpsy", "category": "Music" },
-    { "url": "https://www.youtube.com/watch?v=JGwWNGJdvx8", "title": "Ed Sheeran - Shape of You (Official Music Video)", "channel": "Ed Sheeran", "category": "Music" },
-    { "url": "https://www.youtube.com/watch?v=YQHsXMglC9A", "title": "Adele - Hello (Official Music Video)", "channel": "Adele", "category": "Music" },
-
-    // ---------- Education ----------
-    { "url": "https://www.youtube.com/watch?v=h6fcK_fRYaI", "title": "The Egg - A Short Story", "channel": "Kurzgesagt – In a Nutshell", "category": "Education" },
-    { "url": "https://www.youtube.com/watch?v=aircAruvnKk", "title": "But what is a neural network? | Deep learning chapter 1", "channel": "3Blue1Brown", "category": "Education" },
-    { "url": "https://www.youtube.com/watch?v=spUNpyF58BY", "title": "But what is the Fourier Transform? A visual introduction.", "channel": "3Blue1Brown", "category": "Education" },
-    { "url": "https://www.youtube.com/watch?v=iG9CE55wbtY", "title": "Do schools kill creativity? | Sir Ken Robinson | TED", "channel": "TED", "category": "Education" },
-    { "url": "https://www.youtube.com/watch?v=iCvmsMzlF7o", "title": "The Power of Vulnerability | Brené Brown | TED", "channel": "TED", "category": "Education" },
-    { "url": "https://www.youtube.com/watch?v=qp0HIF3SfI4", "title": "How Great Leaders Inspire Action | Simon Sinek | TED", "channel": "TED", "category": "Education" },
-
-    // ---------- Tech & Science ----------
-    { "url": "https://www.youtube.com/watch?v=ravLFzIguCM", "title": "C# in 100 Seconds", "channel": "Fireship", "category": "Tech" },
-    { "url": "https://www.youtube.com/watch?v=DHjqpvDnNGE", "title": "JavaScript in 100 Seconds", "channel": "Fireship", "category": "Tech" },
-    { "url": "https://www.youtube.com/watch?v=x7X9w_GIm1s", "title": "Python in 100 Seconds", "channel": "Fireship", "category": "Tech" },
-    { "url": "https://www.youtube.com/watch?v=xoxhDk-hwuo", "title": "Glitter Bomb 1.0 vs Porch Pirates", "channel": "Mark Rober", "category": "Science" },
-    { "url": "https://www.youtube.com/watch?v=wbSwFU6tY1c", "title": "Falcon Heavy Test Flight", "channel": "SpaceX", "category": "Science" },
-    { "url": "https://www.youtube.com/watch?v=Rv9hn4IGofM", "title": "Iguana vs Snakes | Planet Earth II", "channel": "BBC Earth", "category": "Nature" },
-
-    // ---------- Gaming ----------
-    { "url": "https://www.youtube.com/watch?v=MmB9b5njVbA", "title": "Official Minecraft Trailer", "channel": "Minecraft", "category": "Gaming" },
-    { "url": "https://www.youtube.com/watch?v=QdBZY2fkU-0", "title": "Grand Theft Auto VI Trailer 1", "channel": "Rockstar Games", "category": "Gaming" },
-
-    // ---------- Classics ----------
-    { "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw", "title": "Me at the zoo", "channel": "jawed", "category": "Classics" },
-    { "url": "https://www.youtube.com/watch?v=dMH0bHeiRNg", "title": "Evolution of Dance", "channel": "Judson Laipply", "category": "Classics" },
-    { "url": "https://www.youtube.com/watch?v=J---aiyznGQ", "title": "Keyboard Cat! - THE ORIGINAL!", "channel": "Keyboard Cat!", "category": "Classics" },
-
-    // ---------- Shorts ----------
-    { "url": "https://www.youtube.com/shorts/se50viFJ0AQ", "title": "Would You Fly To Paris For A Baguette?", "channel": "MrBeast", "category": "Entertainment" },
-    { "url": "https://www.youtube.com/shorts/YlvcFJOE-OE", "title": "Giving iPhones Instead Of Candy on Halloween", "channel": "MrBeast", "category": "Entertainment" },
-    { "url": "https://www.youtube.com/shorts/JfbnpYLe3Ms", "title": "If Cleaning Was a Timed Sport. Part 2", "channel": "Daniel LaBelle", "category": "Comedy" },
-    { "url": "https://www.youtube.com/shorts/ldSVhw1Nv50", "title": "Real life transforming Cinderella dress!", "channel": "Justin Flom", "category": "Entertainment" },
-    { "url": "https://www.youtube.com/shorts/Nus7MfF2ytw", "title": "Power Tools Racing Is INTENSE!!", "channel": "How Ridiculous", "category": "Entertainment" },
-    { "url": "https://www.youtube.com/shorts/ufvttxs9vEo", "title": "Monica Toy | Imitoys - If you can't imitate, just stay home!", "channel": "Monica Toy", "category": "Comedy" },
-    { "url": "https://www.youtube.com/shorts/Kq4O7W5EQ7Y", "title": "Ladybug Squishy DIY with Nano Tape", "channel": "조이밤 Joy_Bamm", "category": "DIY" },
-    { "url": "https://www.youtube.com/shorts/xLezgUBTFg4", "title": "World's Best Prank Gone Wrong!", "channel": "Collins Key Shorts", "category": "Comedy" },
-    { "url": "https://www.youtube.com/shorts/OE1mRsNz85k", "title": "My first time filming 📸!", "channel": "GK8 VLOGS", "category": "Entertainment" }
+    {
+      "file": "videos/baby_shower.mp4",
+      "title": "Baby Scan Video",
+      "category": "My videos"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=fU1KKvbCrRI",
+      "title": "Monkey Banana Dance | Baby Monkey | Dance Along Song | 【entity-Pinkfong¦canonical_name=Pinkfong】 Kids Songs",
+      "channel": "【entity-Pinkfong¦canonical_name=Pinkfong】",
+      "category": "Kids"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=_G5wpMMWh_0",
+      "title": "🍎 Learn Fruit Names for Toddlers | First Words for Babies | Learning Videos for Kids | English ESL",
+      "category": "Education"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=QI5wQGyP3Nk",
+      "title": "Daily Learning Lessons With Noodle & Pals! | Preschool Activities | Kids Songs",
+      "channel": "【entity-Super Simple¦canonical_name=Super Simple】 Songs - Kids Songs",
+      "category": "Education"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Rj6zijnotbM",
+      "title": "Peekaboo Achoo + More | 1 Hour of Family Music for The Holidays | 【entity-Super Simple¦canonical_name=Super Simple】 Songs",
+      "channel": "【entity-Super Simple¦canonical_name=Super Simple】 Songs - Kids Songs",
+      "category": "Kids"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=-5jzDiMMYVI",
+      "title": "[🎵BEST] Let's Sing Baby Shark Songs with Hoi! | +Compilation Song and Stories | Baby Shark Official",
+      "channel": "Baby Shark Official",
+      "category": "Kids"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=AXDW0Mgqgjg",
+      "title": "Diana and Helpful Funny Stories for Kids",
+      "channel": "【entity-Kids Diana Show¦canonical_name=Kids Diana Show】",
+      "category": "Kids"
+    },
+    {
+      "url": "https://www.youtube.com/shorts/GzW_Esj_P64",
+      "title": "Shapes Learning | Kids Song Square & Circle | Lagu Anak Balita Paud Tk Mengenal Bentuk",
+      "category": "Education",
+      "short": true
+    },
+    {
+      "url": "https://www.youtube.com/shorts/MnT5V6eOLog",
+      "title": "Five Little Ducks Nursery Rhyme | Baby Song | #Short | Kids song - NuNu Tv Animal Time",
+      "channel": "NuNu Tv - Animal Time",
+      "category": "Kids",
+      "short": true
+    },
+    {
+      "url": "https://www.youtube.com/shorts/rlEvvCp0-aI",
+      "title": "aTiny Jump, Brave Swim, Perfect Catch! 👶💦🏊✨ — #JuniorSwimmer #KidsActivities #PoolPractice",
+      "category": "Kids",
+      "short": true
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=2dDpryw3z5w",
+      "title": "Learn with 【entity-Ms Rachel¦canonical_name=Ms Rachel】 - Friendship & Social Skills - Videos for Kids - Colors, Letters & Counting",
+      "channel": "【entity-Ms Rachel¦canonical_name=Ms Rachel】",
+      "category": "Education"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=2QtoaV22rpY",
+      "title": "Top 20 Circle Time Songs ⭕️ | Kids Classroom Favorites | 【entity-Super Simple¦canonical_name=Super Simple】's 20th Anniversary!",
+      "channel": "【entity-Super Simple Songs¦canonical_name=Super Simple】 - Kids Songs",
+      "category": "Education"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=FXjC69MmcPY",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=fjC1bgOF9xM&pp=ygUjYmFieSBsZWFybmluZyB2aWRlb3MgZm9yIDIgeWVhciBvbGQ%3D",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=jHfwxsGO904&list=RDjHfwxsGO904&start_radio=1&pp=ygUjYmFieSBsZWFybmluZyB2aWRlb3MgZm9yIDIgeWVhciBvbGSgBwE%3D",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=NrX9To4bjFk&pp=ygUjYmFieSBsZWFybmluZyB2aWRlb3MgZm9yIDIgeWVhciBvbGTSBwkJNgwBhyohjO8%3D",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    }
+    ,
+    {
+      "url": "https://www.youtube.com/watch?v=NUMz00m8ySk&pp=ygUjYmFieSBsZWFybmluZyB2aWRlb3MgZm9yIDIgeWVhciBvbGQ%3D",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    } ,
+    {
+      "url": "https://www.youtube.com/watch?v=DXJXJFAKO7k&pp=ygUjYmFieSBsZWFybmluZyB2aWRlb3MgZm9yIDIgeWVhciBvbGQ%3D",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    } ,
+    {
+      "url": "https://www.youtube.com/watch?v=BihhMsr4CCk&pp=ygUjYmFieSBsZWFybmluZyB2aWRlb3MgZm9yIDIgeWVhciBvbGQ%3D",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    } ,
+    {
+      "url": "https://www.youtube.com/watch?v=LiD67tAmd98&pp=ygUjYmFieSBsZWFybmluZyB2aWRlb3MgZm9yIDIgeWVhciBvbGQ%3D",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    } ,
+    {
+      "url": "https://www.youtube.com/watch?v=wE4A8AtP8bI&pp=ygUjYmFieSBsZWFybmluZyB2aWRlb3MgZm9yIDIgeWVhciBvbGQ%3D",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    } ,
+    {
+      "url": "https://www.youtube.com/watch?v=l2BAM76LTWU&pp=ygUjYmFieSBsZWFybmluZyB2aWRlb3MgZm9yIDIgeWVhciBvbGTSBwkJNgwBhyohjO8%3D",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    } ,
+    {
+      "url": "https://www.youtube.com/watch?v=9_WBQISVHnw&t=60s&pp=ygUjYmFieSBsZWFybmluZyB2aWRlb3MgZm9yIDIgeWVhciBvbGQ%3D",
+      "title": "🌈🎵 Learn, Sing, and Explore! Preschool Fun on the Farm & Under the Sea, Toddler English Learning 🌊🐄",
+      "channel": "Little Bee Library",
+      "category": "Education"
+    }
   ]
 }

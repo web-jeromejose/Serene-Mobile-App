@@ -9,7 +9,8 @@ public sealed class SettingsService
         set
         {
             Preferences.Set("theme", (int)value);
-            if (Application.Current is not null) Application.Current.UserAppTheme = value;
+            if (Microsoft.Maui.Controls.Application.Current is not null)
+                Microsoft.Maui.Controls.Application.Current.UserAppTheme = value;
         }
     }
 

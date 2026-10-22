@@ -76,6 +76,35 @@ public static class Formatters
         if (name.Length == 0) return "My video";
         return char.ToUpperInvariant(name[0]) + name[1..];
     }
+
+    public static string FriendlyBundledTitle(string fileName)
+    {
+        string[] titles = [
+            "Sweet Little Moments", "Baby Memories", "Tiny Adventures",
+            "A Lovely Day", "Happy Little Memory", "Serene Moments",
+            "A Special Memory", "Little Star"
+        ];
+        var hash = Math.Abs(fileName.GetHashCode()) % titles.Length;
+        return titles[hash];
+    }
+
+    public static string FriendlyBundledDescription(string fileName, bool isShort)
+    {
+        string[] shortDescriptions = [
+            "A tiny moment worth remembering.",
+            "A sweet little clip from SereneAppTube.",
+            "A quick burst of joy.",
+            "A small memory with a big smile.",
+            "A lovely moment, captured in seconds."
+        ];
+        string[] videoDescriptions = [
+            "A personal video from SereneAppTube.",
+            "A peaceful memory from your video collection.",
+            "A special moment saved in SereneAppTube."
+        ];
+        var choices = isShort ? shortDescriptions : videoDescriptions;
+        return choices[Math.Abs(fileName.GetHashCode()) % choices.Length];
+    }
 }
 
 public static class LocalPaths
@@ -102,5 +131,5 @@ public static class LocalPaths
     }
 
     public static bool IsVideoFile(string name) =>
-        Path.GetExtension(name).ToLowerInvariant() is ".mp4" or ".m4v" or ".mov" or ".webm" or ".mkv" or ".3gp";
+        Path.GetExtension(name).Equals(".mp4", StringComparison.OrdinalIgnoreCase);
 }

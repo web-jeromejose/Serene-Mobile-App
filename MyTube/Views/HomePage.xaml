@@ -41,7 +41,7 @@
                 <Border BackgroundColor="{StaticResource Accent}" StrokeThickness="0" StrokeShape="RoundRectangle 7" WidthRequest="34" HeightRequest="24">
                     <Label FontFamily="MaterialIcons" Text="&#xe037;" TextColor="White" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
-                <Label Text="MyTube" FontSize="21" FontAttributes="Bold" CharacterSpacing="-0.5" VerticalOptions="Center" />
+                <Label Text="SereneAppTube" FontSize="21" FontAttributes="Bold" CharacterSpacing="-0.5" VerticalOptions="Center" />
             </HorizontalStackLayout>
             <Label Grid.Column="2" Style="{StaticResource IconButton}" Text="&#xe8b6;">
                 <Label.GestureRecognizers>

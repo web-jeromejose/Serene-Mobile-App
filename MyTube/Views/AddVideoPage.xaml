@@ -12,7 +12,7 @@
     <ScrollView>
         <VerticalStackLayout Padding="16,12,16,32" Spacing="16">
             <Label Text="Create" FontSize="26" FontAttributes="Bold" />
-            <Label Text="Add YouTube videos and Shorts by link, or upload your own videos. They're mixed randomly into Home and Shorts."
+            <Label Text="Add YouTube videos and Shorts by link, or upload your own MP4 videos. They're mixed randomly into Home and Shorts."
                    Style="{StaticResource Secondary}" FontSize="14" />
 
             <!-- Status -->
@@ -106,10 +106,10 @@
                         <Label FontFamily="MaterialIcons" Text="&#xe157;" FontSize="26" TextColor="{StaticResource Accent}" VerticalOptions="Center" />
                         <Label Text="Add your video from a link" Style="{StaticResource SectionTitle}" VerticalOptions="Center" />
                     </HorizontalStackLayout>
-                    <Label Text="A direct link to an .mp4 or .m3u8 you host (OneDrive/Dropbox direct links, your website, cloud storage…)."
+                    <Label Text="A direct link to an .mp4, .mov or .m3u8 you host (OneDrive/Dropbox direct links, your website, cloud storage…)."
                            Style="{StaticResource Secondary}" FontSize="13" />
                     <Border Style="{StaticResource InputBox}">
-                        <Entry Placeholder="https://…/my-video.mp4" Text="{Binding OwnLink}" Keyboard="Url" />
+                        <Entry Placeholder="https://…/my-video.mp4 or .mov" Text="{Binding OwnLink}" Keyboard="Url" />
                     </Border>
                     <Border Style="{StaticResource InputBox}">
                         <Entry Placeholder="Title" Text="{Binding OwnLinkTitle}" />

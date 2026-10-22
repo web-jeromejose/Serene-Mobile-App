@@ -18,7 +18,7 @@ public sealed class VideoPlayerView : ContentView
     readonly ActivityIndicator _spinner = new() { Color = Colors.White, IsRunning = false, WidthRequest = 40, HeightRequest = 40, HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center, InputTransparent = true };
     readonly VerticalStackLayout _errorPanel;
     readonly Label _errorLabel;
-    readonly Button _errorButton;
+    readonly Microsoft.Maui.Controls.Button _errorButton;
     readonly IDispatcherTimer _timer;
 
     YouTubeWebView? _web;
@@ -35,7 +35,7 @@ public sealed class VideoPlayerView : ContentView
     public VideoPlayerView()
     {
         _errorLabel = new Label { TextColor = Colors.White, FontSize = 15, HorizontalTextAlignment = TextAlignment.Center, Margin = new Thickness(24, 0) };
-        _errorButton = new Button { Text = "Watch on YouTube", BackgroundColor = Colors.White, TextColor = Colors.Black, HorizontalOptions = LayoutOptions.Center, CornerRadius = 18, Padding = new Thickness(18, 8) };
+        _errorButton = new Microsoft.Maui.Controls.Button { Text = "Watch on YouTube", BackgroundColor = Colors.White, TextColor = Colors.Black, HorizontalOptions = LayoutOptions.Center, CornerRadius = 18, Padding = new Thickness(18, 8) };
         _errorButton.Clicked += async (_, _) => { if (_video is not null) await VideoActions.OpenInYouTubeAsync(_video); };
         _errorPanel = new VerticalStackLayout
         {
@@ -170,6 +170,7 @@ public sealed class VideoPlayerView : ContentView
             {
                 ShouldAutoPlay = true,
                 ShouldKeepScreenOn = true,
+                Speed = 0.8,
                 BackgroundColor = Colors.Black,
             };
             _media.MediaOpened += OnMediaOpened;

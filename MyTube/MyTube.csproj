@@ -17,7 +17,7 @@
 		<MauiXamlInflator>XamlC</MauiXamlInflator>
 
 		<!-- Display name -->
-		<ApplicationTitle>MyTube</ApplicationTitle>
+		<ApplicationTitle>SereneAppTube</ApplicationTitle>
 
 		<!-- App Identifier. Also used as the HTTP Referer that identifies the app to the YouTube player. -->
 		<ApplicationId>com.jerome.mytube</ApplicationId>
@@ -28,13 +28,14 @@
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
+		<!-- Support 32-bit ARM devices such as the Redmi A3, plus 64-bit phones and x64 emulators. -->
+		<RuntimeIdentifiers Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">android-arm;android-arm64;android-x64</RuntimeIdentifiers>
 	</PropertyGroup>
 
 	<!-- Release builds: a signed APK you can copy to a phone and install (switch to 'aab' for Google Play).
 	     64-bit ARM covers modern phones; x64 covers the Android emulator. -->
 	<PropertyGroup Condition="'$(Configuration)' == 'Release' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
 		<AndroidPackageFormat>apk</AndroidPackageFormat>
-		<RuntimeIdentifiers>android-arm;android-arm64;android-x64</RuntimeIdentifiers>
 	</PropertyGroup>
 
 	<!-- One signing key for every PC: build-android.ps1 creates MyTube\signing the first time (OneDrive keeps it in sync).
@@ -52,7 +53,7 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FF0033" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#0F0F0F" BaseSize="160,160" />
+		<MauiSplashScreen Include="Resources\Splash\loading.jpg" Color="#0F0F0F" Resize="false" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />

@@ -8,3 +8,13 @@ artifacts/
 
 # App signing key: private, back it up, never share it publicly
 MyTube/signing/
+
+# Personal media and local video imports; keep the folder structure only.
+MyTube/Resources/Raw/videos/*
+!MyTube/Resources/Raw/videos/PUT-YOUR-VIDEOS-HERE.txt
+
+# Personal source images copied for local use.
+MyTube/images/
+
+# Temporary build verification output.
+objverify/

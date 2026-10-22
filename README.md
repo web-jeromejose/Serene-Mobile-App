@@ -40,8 +40,7 @@ You can also add links inside the app (**+** tab), including many at once.
 ### 2. Your own videos
 Pick whichever suits you:
 
-- **Bundle them:** drop `.mp4` files into [`MyTube/Resources/Raw/videos/`](MyTube/Resources/Raw/videos/) and rebuild. They show up automatically. To set a title, or `"short": true` for vertical clips, add a `"file"` entry:
-  `{ "file": "videos/beach.mp4", "title": "Beach day", "short": true }`
+- **Bundle them:** drop `.mp4` files into [`MyTube/Resources/Raw/videos/`](MyTube/Resources/Raw/videos/) and rebuild. They show up automatically with generated titles and descriptions. MP4 files shorter than 11 seconds are automatically shown as Shorts.
 - **Upload on the phone:** **+** tab → *Choose video* or *Record*.
 - **Host online:** `{ "url": "https://example.com/my-video.mp4", "title": "My trip", "own": true }`
 
@@ -53,6 +52,35 @@ Put a `catalog.json` (or a `.txt` with one YouTube link per line) online, for ex
 ## Install and run
 
 The project is in [`MyTube/`](MyTube/) (solution `MyTube.slnx`). It targets **.NET 10 MAUI** and runs on **Android 8.0 (API 26) or newer**.
+
+### Build from PowerShell
+
+Open PowerShell in the `Maui-app` folder:
+
+```powershell
+cd C:\Users\mesek\Github\xampp\htdocs\Maui-app
+```
+
+Restore dependencies and build Debug:
+
+```powershell
+dotnet restore .\MyTube\MyTube.csproj
+dotnet build .\MyTube\MyTube.csproj -f net10.0-android
+```
+
+Build a Release APK:
+
+```powershell
+dotnet build .\MyTube\MyTube.csproj -c Release -f net10.0-android
+```
+
+To deploy directly to a connected Android phone, enable USB debugging, confirm the phone with ADB, then press **F5** in Visual Studio. The project includes `android-arm` for 32-bit ARM phones such as the Redmi A3.
+
+To check generated APK files:
+
+```powershell
+Get-ChildItem .\MyTube\bin -Filter *.apk -Recurse
+```
 
 Pick one of the three options below. Option A is the easiest; Option B is best while you're changing the app.
 

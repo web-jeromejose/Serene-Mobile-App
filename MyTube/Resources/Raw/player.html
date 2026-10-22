@@ -14,8 +14,21 @@
   <div id="player"></div>
   <script>
     // Values replaced by VideoPlayerView before loading.
-    var cfg = { videoId: '__VIDEO_ID__', start: __START__, controls: __CONTROLS__, loop: __LOOP__ };
+    var cfg = { videoId: '__VIDEO_ID__', start: __START__, controls: __CONTROLS__, loop: __LOOP__, speed: 0.8 };
     var player = null, ready = false, lastError = 0;
+
+    function setAppSpeed() {
+      if (!player || !ready) return;
+      var rates = player.getAvailablePlaybackRates ? player.getAvailablePlaybackRates() : [];
+      if (rates && rates.length) {
+        var closest = rates.reduce(function (best, rate) {
+          return Math.abs(rate - cfg.speed) < Math.abs(best - cfg.speed) ? rate : best;
+        }, rates[0]);
+        player.setPlaybackRate(closest);
+      } else {
+        player.setPlaybackRate(cfg.speed);
+      }
+    }
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
@@ -28,7 +41,7 @@
           origin: window.location.origin, widget_referrer: window.location.href
         },
         events: {
-          onReady: function (e) { ready = true; e.target.playVideo(); },
+          onReady: function (e) { ready = true; setAppSpeed(); e.target.playVideo(); },
           onStateChange: function (e) {
             if (e.data === 0 && cfg.loop) { player.seekTo(0, true); player.playVideo(); }
           },
@@ -47,7 +60,7 @@
     }
     function appLoad(id, start) {
       lastError = 0; cfg.videoId = id; cfg.start = start || 0;
-      if (player && ready) player.loadVideoById({ videoId: id, startSeconds: cfg.start });
+      if (player && ready) { player.loadVideoById({ videoId: id, startSeconds: cfg.start }); setAppSpeed(); }
       return 'ok';
     }
     function appPlay() { if (player && ready) player.playVideo(); return 'ok'; }

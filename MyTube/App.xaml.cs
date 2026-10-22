@@ -1,6 +1,6 @@
 ﻿namespace MyTube;
 
-public partial class App : Application
+public partial class App : Microsoft.Maui.Controls.Application
 {
     public App(SettingsService settings)
     {
@@ -11,7 +11,7 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        var window = new Window(new AppShell()) { Title = "MyTube" };
+        var window = new Window(new AppShell()) { Title = "SereneAppTube" };
         window.SizeChanged += (_, _) => LayoutMetrics.Current.Update(window.Width, window.Height);
         window.Created += (_, _) => ApplySystemBars();
         window.Resumed += (_, _) => ApplySystemBars();

@@ -124,7 +124,7 @@ public sealed class CatalogService(LibraryService library, SettingsService setti
                 Id = id,
                 Source = VideoSource.Own,
                 MediaUri = "embed://" + file,
-                Title = Formatters.TitleFromFileName(file),
+                Title = Formatters.FriendlyBundledTitle(file),
                 Channel = _defaultOwnChannel,
                 Category = "My videos",
             });
@@ -273,9 +273,20 @@ public sealed class CatalogService(LibraryService library, SettingsService setti
         MainThread.BeginInvokeOnMainThread(() =>
         {
             if (info.HasThumbnail) v.Thumbnail = LocalPaths.LocalScheme + relative;
-            if (info.DurationSeconds is > 0 && v.DurationSeconds is null) v.DurationSeconds = info.DurationSeconds;
+            if (info.DurationSeconds is > 0 && v.DurationSeconds is null)
+            {
+                var isShort = info.DurationSeconds < 11;
+                v.DurationSeconds = info.DurationSeconds;
+                v.Format = isShort ? VideoFormat.Short : VideoFormat.Video;
+                v.Category = isShort ? "Shorts" : "My videos";
+                if (v.Id.StartsWith("asset:", StringComparison.Ordinal))
+                {
+                    v.Title = Formatters.FriendlyBundledTitle(v.MediaUri ?? v.Id);
+                    v.Description = Formatters.FriendlyBundledDescription(v.MediaUri ?? v.Id, isShort);
+                }
+            }
         });
-        return info.HasThumbnail;
+        return info.HasThumbnail || info.DurationSeconds is > 0;
     }
 
     // ------------------------------------------------------------------ online catalog
