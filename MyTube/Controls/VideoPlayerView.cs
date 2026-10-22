@@ -53,6 +53,8 @@ public sealed class VideoPlayerView : ContentView
         _root.Add(_poster);
         _root.Add(_spinner);
         _root.Add(_errorPanel);
+        _root.HorizontalOptions = LayoutOptions.Fill;
+        _root.VerticalOptions = LayoutOptions.Fill;
         Content = _root;
 
         _timer = Dispatcher.CreateTimer();

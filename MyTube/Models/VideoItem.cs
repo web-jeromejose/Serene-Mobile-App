@@ -13,6 +13,7 @@ public sealed class VideoItem : ObservableObject
     string _title = string.Empty;
     string _channel = string.Empty;
     string? _thumbnail;
+    bool _isPortrait;
     double? _durationSeconds;
     double _watchProgress;
 
@@ -99,7 +100,12 @@ public sealed class VideoItem : ObservableObject
     [JsonIgnore] public bool IsShort => Format == VideoFormat.Short;
     [JsonIgnore] public bool IsOwn => Source == VideoSource.Own;
     [JsonIgnore] public bool IsYouTube => Source == VideoSource.YouTube;
-    [JsonIgnore] public bool IsPortrait { get; set; }
+    [JsonIgnore]
+    public bool IsPortrait
+    {
+        get => _isPortrait;
+        set => SetProperty(ref _isPortrait, value);
+    }
     [JsonIgnore] public bool HasDuration => !IsShort && DurationSeconds > 0;
     [JsonIgnore] public string DurationText => Formatters.Duration(DurationSeconds);
     [JsonIgnore] public string ChannelInitial => Formatters.Initial(Channel);

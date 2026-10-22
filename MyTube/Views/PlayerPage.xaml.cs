@@ -8,6 +8,7 @@ public partial class PlayerPage : ContentPage
     readonly IDispatcherTimer _upNextTimer;
     int _countdown;
     bool _released;
+    VideoItem? _sizedVideo;
 
     public PlayerPage(PlayerViewModel vm)
     {
@@ -49,6 +50,7 @@ public partial class PlayerPage : ContentPage
     void OnMetricsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(LayoutMetrics.IsLandscape)) ApplyOrientation();
+        else if (e.PropertyName == nameof(LayoutMetrics.PlayerHeight)) ApplyVideoSize(_vm.Video);
     }
 
     // Rotate to landscape → full-screen player, like YouTube.
@@ -67,8 +69,23 @@ public partial class PlayerPage : ContentPage
 
     void ApplyVideoSize(VideoItem? video)
     {
+        if (!ReferenceEquals(_sizedVideo, video))
+        {
+            if (_sizedVideo is not null) _sizedVideo.PropertyChanged -= OnVideoPropertyChanged;
+            _sizedVideo = video;
+            if (_sizedVideo is not null) _sizedVideo.PropertyChanged += OnVideoPropertyChanged;
+        }
+
         var portrait = !LayoutMetrics.Current.IsLandscape && video?.IsPortrait == true;
-        PlayerHost.MaximumHeightRequest = portrait ? LayoutMetrics.Current.PlayerHeight * 0.5 : -1;
+        var normalHeight = Math.Max(1, LayoutMetrics.Current.PlayerHeight);
+        PlayerHost.MinimumHeightRequest = 1;
+        PlayerHost.MaximumHeightRequest = portrait ? Math.Max(1, normalHeight * 0.5) : normalHeight;
+    }
+
+    void OnVideoPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(VideoItem.IsPortrait))
+            MainThread.BeginInvokeOnMainThread(() => ApplyVideoSize(_vm.Video));
     }
 
     void OnEnded()

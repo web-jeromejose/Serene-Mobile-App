@@ -30,8 +30,8 @@
     <Grid x:Name="Root" RowDefinitions="Auto,*" BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}">
 
         <!-- Player -->
-        <Grid x:Name="PlayerHost" BackgroundColor="Black">
-            <c:VideoPlayerView x:Name="Player" />
+        <Grid x:Name="PlayerHost" BackgroundColor="Black" VerticalOptions="Start" MinimumHeightRequest="1">
+            <c:VideoPlayerView x:Name="Player" HorizontalOptions="Fill" VerticalOptions="Fill" />
 
             <Label x:Name="BackButton" Style="{StaticResource IconButton}" FontFamily="MaterialIcons" Text="&#xe5cf;" TextColor="White" FontSize="30"
                    HorizontalOptions="Start" VerticalOptions="Start" Margin="4">
