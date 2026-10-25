@@ -28,7 +28,7 @@ The simplest workflow is: copy MP4 files, build, install, and play.
 | Input | Result |
 |---|---|
 | `.mp4` in `MyTube/Resources/Raw/videos` | Loaded automatically |
-| MP4 shorter than 11 seconds | Classified as a Short |
+| Portrait MP4 | Classified as a Short |
 | `.MOV`, `.MKV`, `.WEBM` in the bundled folder | Ignored until converted to MP4 |
 | YouTube URL | Requires internet access |
 | Local video playback | Defaults to `0.8×` speed |
@@ -68,13 +68,12 @@ You can also add links inside the app (**+** tab), including many at once.
 
 Copy `.mp4` files into [`MyTube/Resources/Raw/videos/`](MyTube/Resources/Raw/videos/). No `catalog.json` entry is required. The folder is scanned automatically when the app starts.
 
-The app loads only `.mp4` files, generates friendly titles and descriptions, assigns the `SereneAppTube` channel, detects thumbnails and duration, and classifies videos shorter than 11 seconds as Shorts. Local videos play at `0.8×` by default.
+The app loads only `.mp4` files, generates friendly titles and descriptions, assigns the `SereneAppTube` channel, detects thumbnails and orientation, and classifies portrait videos as Shorts. Local videos play at `0.8×` by default.
 
 For best Redmi A3 compatibility, use H.264 8-bit video with AAC audio, `yuv420p`, and a maximum 1280-pixel dimension.
 
 ### 3. Upload or host videos
 
-- **Bundle them:** drop `.mp4` files into [`MyTube/Resources/Raw/videos/`](MyTube/Resources/Raw/videos/) and rebuild. They show up automatically with generated titles and descriptions. MP4 files shorter than 11 seconds are automatically shown as Shorts.
 - **Upload on the phone:** **+** tab → *Choose video* or *Record*.
 - **Host online:** `{ "url": "https://example.com/my-video.mp4", "title": "My trip", "own": true }`
 
@@ -159,7 +158,7 @@ Pick one of the three options below. Option A is the easiest; Option B is best w
    2. Android asks to allow installing unknown apps from that app. Tap **Settings**, switch on **Allow from this source**, and go back.
    3. Tap **Install**. If **Play Protect** warns that it doesn't recognise the app, tap **More details → Install anyway**. This is expected for apps that aren't from the Play Store.
 
-4. **Open SereneAppTube** from the app drawer. Home shows the MP4 files bundled in `Resources/Raw/videos`; tap any video to play it, or open **Shorts** for clips shorter than 11 seconds.
+4. **Open SereneAppTube** from the app drawer. Home shows the MP4 files bundled in `Resources/Raw/videos`; portrait videos open in **Shorts** and landscape videos open in the normal player.
 
 To update the app later, rebuild and install the new APK the same way. Your likes, history and uploads are kept.
 

@@ -12,6 +12,7 @@ public sealed class CatalogService(LibraryService library, SettingsService setti
     readonly Dictionary<string, VideoItem> _byId = new(StringComparer.Ordinal);
     List<VideoItem> _all = [];
     Task? _loading;
+    bool _connectivityHooked;
     string _defaultOwnChannel = "My Channel";
 
     static string RemoteCachePath => Path.Combine(FileSystem.AppDataDirectory, "remote-catalog.json");
@@ -19,11 +20,26 @@ public sealed class CatalogService(LibraryService library, SettingsService setti
     /// <summary>Raised on the main thread when videos are added, removed or refreshed.</summary>
     public event Action? Changed;
 
-    public Task EnsureLoadedAsync() => _loading ??= LoadAsync();
+    public Task EnsureLoadedAsync()
+    {
+        if (!_connectivityHooked)
+        {
+            _connectivityHooked = true;
+            Connectivity.Current.ConnectivityChanged += OnConnectivityChanged;
+        }
+        return _loading ??= LoadAsync();
+    }
+
+    void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs e) => RaiseChanged();
 
     /// <summary>All visible videos (not marked "Not interested"; own videos only if enabled).</summary>
     public IReadOnlyList<VideoItem> All =>
-        _all.Where(v => !library.IsHidden(v.Id) && (settings.IncludeOwnVideos || !v.IsOwn || v.IsUserAdded)).ToList();
+        _all.Where(v => !RequiresInternet(v) || Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+            .Where(v => !library.IsHidden(v.Id) && (settings.IncludeOwnVideos || !v.IsOwn || v.IsUserAdded))
+            .ToList();
+
+    static bool RequiresInternet(VideoItem video) =>
+        video.IsYouTube || video.MediaUri?.StartsWith("http", StringComparison.OrdinalIgnoreCase) == true;
 
     public IEnumerable<VideoItem> Videos => All.Where(v => !v.IsShort);
     public IEnumerable<VideoItem> Shorts => All.Where(v => v.IsShort);
@@ -246,7 +262,8 @@ public sealed class CatalogService(LibraryService library, SettingsService setti
             });
 
         var ownTasks = _all
-            .Where(v => v.IsOwn && string.IsNullOrWhiteSpace(v.Thumbnail) && v.MediaUri is not null)
+            .Where(v => v.IsOwn && v.MediaUri is not null &&
+                        (string.IsNullOrWhiteSpace(v.Thumbnail) || v.DurationSeconds is null))
             .Select(async v =>
             {
                 await throttle.WaitAsync();
@@ -265,7 +282,7 @@ public sealed class CatalogService(LibraryService library, SettingsService setti
         if (File.Exists(path))
         {
             MainThread.BeginInvokeOnMainThread(() => v.Thumbnail = LocalPaths.LocalScheme + relative);
-            return true;
+            if (v.DurationSeconds is not null) return true;
         }
 
         var info = await MediaProbe.ProbeAsync(v.MediaUri!, path);
@@ -273,10 +290,10 @@ public sealed class CatalogService(LibraryService library, SettingsService setti
         MainThread.BeginInvokeOnMainThread(() =>
         {
             if (info.HasThumbnail) v.Thumbnail = LocalPaths.LocalScheme + relative;
-            if (info.DurationSeconds is > 0 && v.DurationSeconds is null)
+            if (info.DurationSeconds is > 0)
             {
-                var isShort = info.DurationSeconds < 11;
-                v.DurationSeconds = info.DurationSeconds;
+                var isShort = info.IsVertical;
+                if (v.DurationSeconds is null) v.DurationSeconds = info.DurationSeconds;
                 v.IsPortrait = info.Height > info.Width && info.Width > 0;
                 v.Format = isShort ? VideoFormat.Short : VideoFormat.Video;
                 v.Category = isShort ? "Shorts" : "My videos";

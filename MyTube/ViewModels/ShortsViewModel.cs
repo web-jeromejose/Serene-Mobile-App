@@ -6,6 +6,7 @@ public sealed partial class ShortsViewModel(CatalogService catalog, LibraryServi
     List<VideoItem> _queue = [];
     int _index = -1;
     VideoItem? _pendingStart;
+    bool _catalogHooked;
 
     [ObservableProperty] private VideoItem? current;
     [ObservableProperty] private bool isLiked;
@@ -25,6 +26,21 @@ public sealed partial class ShortsViewModel(CatalogService catalog, LibraryServi
     {
         await catalog.EnsureLoadedAsync();
 
+        if (!_catalogHooked)
+        {
+            _catalogHooked = true;
+            catalog.Changed += ResetQueue;
+        }
+
+        var online = Connectivity.Current.NetworkAccess == NetworkAccess.Internet;
+        if (!online && (_pendingStart?.IsYouTube == true || Current?.IsYouTube == true))
+        {
+            _pendingStart = null;
+            Current = null;
+            _queue.Clear();
+            _index = -1;
+        }
+
         if (_pendingStart is { } start)
         {
             _pendingStart = null;
@@ -42,6 +58,15 @@ public sealed partial class ShortsViewModel(CatalogService catalog, LibraryServi
         }
 
         return null;
+    }
+
+    void ResetQueue()
+    {
+        _queue.Clear();
+        _index = -1;
+        _pendingStart = null;
+        Current = null;
+        IsEmpty = false;
     }
 
     public VideoItem? Next() => Move(1);

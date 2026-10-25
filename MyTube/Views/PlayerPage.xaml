@@ -27,10 +27,10 @@
         </Style>
     </ContentPage.Resources>
 
-    <Grid x:Name="Root" RowDefinitions="Auto,*" BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}">
+    <Grid x:Name="Root" RowDefinitions="Auto,*" BackgroundColor="{AppThemeBinding Light={StaticResource BgLight}, Dark={StaticResource BgDark}}" VerticalOptions="Fill">
 
         <!-- Player -->
-        <Grid x:Name="PlayerHost" BackgroundColor="Black" VerticalOptions="Start" MinimumHeightRequest="1">
+        <Grid x:Name="PlayerHost" BackgroundColor="Black" VerticalOptions="Fill" HorizontalOptions="Fill" MinimumHeightRequest="1" ZIndex="10">
             <c:VideoPlayerView x:Name="Player" HorizontalOptions="Fill" VerticalOptions="Fill" />
 
             <Label x:Name="BackButton" Style="{StaticResource IconButton}" FontFamily="MaterialIcons" Text="&#xe5cf;" TextColor="White" FontSize="30"
@@ -57,7 +57,7 @@
         </Grid>
 
         <!-- Details + Up next -->
-        <CollectionView x:Name="DetailsList" Grid.Row="1" ItemsSource="{Binding UpNext}">
+        <CollectionView x:Name="DetailsList" Grid.Row="1" ItemsSource="{Binding UpNext}" IsVisible="False" Margin="0,12,0,0" ZIndex="0" VerticalOptions="Fill">
             <CollectionView.Header>
                 <VerticalStackLayout Padding="0,12,0,4" Spacing="12">
 
@@ -74,7 +74,7 @@
                     </VerticalStackLayout>
 
                     <!-- Channel row -->
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="12,0">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="12,0" IsVisible="False">
                         <Border WidthRequest="38" HeightRequest="38" StrokeThickness="0" StrokeShape="Ellipse" BackgroundColor="{Binding Video.ChannelColor}">
                             <Label Text="{Binding Video.ChannelInitial}" TextColor="White" FontAttributes="Bold" FontSize="17" HorizontalOptions="Center" VerticalOptions="Center" />
                         </Border>
@@ -97,7 +97,7 @@
                     </Grid>
 
                     <!-- Actions -->
-                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never" IsVisible="False">
                         <HorizontalStackLayout Padding="12,0">
                             <Border Style="{StaticResource ActionPill}">
                                 <HorizontalStackLayout Spacing="14">
@@ -188,7 +188,7 @@
                     </Border>
 
                     <!-- Comments (saved on this device) -->
-                    <Border Style="{StaticResource Card}" Margin="12,0" Padding="12">
+                    <Border Style="{StaticResource Card}" Margin="12,0" Padding="12" IsVisible="False">
                         <VerticalStackLayout Spacing="10">
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="{Binding CommentsHeader}" FontAttributes="Bold" FontSize="15" />

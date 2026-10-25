@@ -112,11 +112,19 @@ public sealed class VideoPlayerView : ContentView
 
         if (_web is null)
         {
-            _web = new YouTubeWebView();
+            _web = new YouTubeWebView
+            {
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.Fill,
+                ZIndex = 5,
+            };
             _root.Insert(0, _web);
             _htmlLoaded = false;
         }
         _web.IsVisible = true;
+        _poster.IsVisible = false;
+        _root.InvalidateMeasure();
+        _web.InvalidateMeasure();
 
         if (_htmlLoaded)
         {

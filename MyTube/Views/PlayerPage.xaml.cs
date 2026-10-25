@@ -36,7 +36,6 @@ public partial class PlayerPage : ContentPage
             else UpNextCountdown.Text = $"Up next in {_countdown}";
         };
 
-        PlayerHost.SetBinding(HeightRequestProperty, new Binding(nameof(LayoutMetrics.PlayerHeight), source: LayoutMetrics.Current));
         LayoutMetrics.Current.PropertyChanged += OnMetricsChanged;
     }
 
@@ -57,11 +56,15 @@ public partial class PlayerPage : ContentPage
     void ApplyOrientation()
     {
         var landscape = LayoutMetrics.Current.IsLandscape;
-        DetailsList.IsVisible = !landscape;
+        DetailsList.IsVisible = false;
         BackButton.IsVisible = !landscape;
         Root.SafeAreaEdges = landscape ? new Microsoft.Maui.SafeAreaEdges(SafeAreaRegions.None) : new Microsoft.Maui.SafeAreaEdges(SafeAreaRegions.Container);
-        Grid.SetRowSpan(PlayerHost, landscape ? 2 : 1);
+        Root.RowDefinitions[0].Height = GridLength.Star;
+        Root.RowDefinitions[1].Height = new GridLength(0);
+        Grid.SetRowSpan(PlayerHost, 1);
+        PlayerHost.VerticalOptions = LayoutOptions.Fill;
         ApplyVideoSize(_vm.Video);
+        Player.InvalidateMeasure();
 #if ANDROID
         MyTube.Droid.SystemBars.HideForLandscape(landscape);
 #endif
@@ -78,8 +81,18 @@ public partial class PlayerPage : ContentPage
 
         var portrait = !LayoutMetrics.Current.IsLandscape && video?.IsPortrait == true;
         var normalHeight = Math.Max(1, LayoutMetrics.Current.PlayerHeight);
+        var portraitHeight = Math.Min(
+            Math.Max(1, LayoutMetrics.Current.Height * 0.72),
+            Math.Max(1, LayoutMetrics.Current.Width * 16 / 9));
+
+        if (portrait)
+            PlayerHost.HeightRequest = portraitHeight;
+        else if (LayoutMetrics.Current.IsLandscape)
+            PlayerHost.ClearValue(HeightRequestProperty);
+        else
+            PlayerHost.HeightRequest = normalHeight;
         PlayerHost.MinimumHeightRequest = 1;
-        PlayerHost.MaximumHeightRequest = portrait ? Math.Max(1, normalHeight * 0.5) : normalHeight;
+        PlayerHost.MaximumHeightRequest = -1;
     }
 
     void OnVideoPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

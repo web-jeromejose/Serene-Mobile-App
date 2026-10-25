@@ -63,6 +63,8 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<!-- Never package incomplete conversion temp files. -->
+		<MauiAsset Remove="Resources\Raw\**\*.__compatible.mp4" />
 	</ItemGroup>
 
 	<ItemGroup>
